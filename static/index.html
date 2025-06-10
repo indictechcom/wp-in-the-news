@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>News of the Day</title>
+    <link href="https://tools-static.wmflabs.org/cdnjs/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://tools-static.wmflabs.org/cdnjs/ajax/libs/bootstrap-icons/1.7.2/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark glass-nav">
+        <div class="container">
+            <a class="navbar-brand gradient-text" href="#">
+                <i class="bi bi-newspaper pulse-icon"></i> Today's News
+            </a>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8 text-center">
+                <h1 class="display-4 mb-4 gradient-text">Welcome to In the News Section</h1>
+          
+                <div class="d-grid gap-4 floating-buttons">
+                    <button class="btn btn-gradient btn-lg card-hover" onclick="getNewsOfTheDay()">
+                        <i class="bi bi-calendar-check"></i> Get News of the Day
+                    </button>
+                    <button class="btn btn-gradient-secondary btn-lg card-hover" onclick="toggleDateSearchForm()">
+                        <i class="bi bi-calendar-search"></i> Search by Date
+                    </button>
+                </div>
+
+                <!-- Date Search Form -->
+                <div id="dateSearchForm" class="mt-5" style="display: none;">
+                    <div class="input-group glass-input">
+                        <input type="date" id="dateInput" class="form-control" placeholder="Select a date">
+                        <button class="btn btn-gradient" onclick="searchByDate()">
+                            <i class="bi bi-search"></i> Search
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Results will be displayed here -->
+                <div id="results" class="mt-4"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Decorative Elements -->
+    <div class="sparkle-container">
+        <div class="sparkle" style="top: 20%; left: 10%; animation-delay: 0s;"></div>
+        <div class="sparkle" style="top: 60%; left: 85%; animation-delay: 1s;"></div>
+        <div class="sparkle" style="top: 30%; left: 75%; animation-delay: 2s;"></div>
+        <div class="sparkle" style="top: 80%; left: 20%; animation-delay: 1.5s;"></div>
+    </div>
+
+    <script src="https://tools-static.wmflabs.org/cdnjs/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="/static/script.js"></script>
+</body>
+</html>
