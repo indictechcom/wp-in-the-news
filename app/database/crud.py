@@ -2,6 +2,7 @@ from datetime import datetime, date
 from sqlalchemy.orm import Session
 from app.database.models import News
 from typing import Optional, List
+from sqlalchemy import func
 import json
 
 def add_news_to_db(db: Session, news_data: dict) -> News:

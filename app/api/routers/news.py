@@ -27,7 +27,7 @@ async def get_news_of_the_day_route(db: Session = Depends(get_db)):
     Fetch and store all news of the day.
     """
     news_data = fetch_news_of_the_day()
-    print(news_data)
+    # print(news_data)
     # Ensure news_data is a list
     if not isinstance(news_data, list) or len(news_data) == 0:
         raise HTTPException(status_code=404, detail="No news data found.")
@@ -49,8 +49,8 @@ async def get_news_of_the_day_route(db: Session = Depends(get_db)):
 
         stored_news.append(news_item)
         add_news_to_db(db, news_item)
-    print("Stored news items:")
-    print(stored_news)
+    # print("Stored news items:")
+    # print(stored_news)
     return stored_news
 
 
@@ -70,5 +70,5 @@ async def get_news_by_date_route(date: str, db: Session = Depends(get_db)):
 
     # Convert ORM objects to Pydantic models
     response = [NewsSchema.from_orm(news) for news in news_list]
-    print(response)  # Debug the response
+    # print(response)  # Debug the response
     return response

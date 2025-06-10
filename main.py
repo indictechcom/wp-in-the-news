@@ -1,15 +1,21 @@
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse ,JSONResponse
 from app.api.routers import news
 from app.database.models import Base, engine
+from fastapi.requests import Request
 
 # Initialize Database
 Base.metadata.create_all(bind=engine)
 
 # Initialize FastAPI
 app = FastAPI()
+
+@app.exception_handler(404)
+async def not_found_handler(request: Request, exc):
+    print(f"404 for {request.url} from {request.headers.get('User-Agent')}")
+    return JSONResponse(status_code=404, content={"detail": "Not Found"})
 
 # Add CORS middleware
 app.add_middleware(

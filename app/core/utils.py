@@ -36,7 +36,7 @@ def extract_news(html_content: str) -> list[dict]:
         
             for item in news_items:
                 # Extract the full text of the news item
-                news_text = item.get_text(strip=True)
+                news_text = item.get_text(separator=' ', strip=True)
                 
                 # Skip empty items
                 if not news_text:
@@ -85,21 +85,21 @@ def extract_news(html_content: str) -> list[dict]:
             for item in news_list:
                 item["featured_date"] = featured_date
     
-    for item in news_list:
-        # Print the news item
-        print(f"ID: {item['id']}")
-        print(f"News: {item['text']}")
+    # for item in news_list:
+    #     # Print the news item
+    #     print(f"ID: {item['id']}")
+    #     print(f"News: {item['text']}")
         
-        # Print the associated links (if any)
-        if item['links']:
-            print("Links:")
-            for link in item['links']:
-                print(f"  - Text: {link['text']}, URL: {link['url']}")
-        else:
-            print("Links: None")
+    #     # Print the associated links (if any)
+    #     if item['links']:
+    #         print("Links:")
+    #         for link in item['links']:
+    #             print(f"  - Text: {link['text']}, URL: {link['url']}")
+    #     else:
+    #         print("Links: None")
         
-        print(f"Featured Date: {item.get('featured_date', 'N/A')}")
+    #     print(f"Featured Date: {item.get('featured_date', 'N/A')}")
         
-        print()  # Add a blank line for better readability
+    #     print()  # Add a blank line for better readability
 
     return news_list

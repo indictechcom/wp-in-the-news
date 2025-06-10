@@ -1,6 +1,59 @@
+// Helper to clear container content safely
+function clearElement(element) {
+    while (element.firstChild) {
+        element.removeChild(element.firstChild);
+    }
+}
+
+// Helper to create and append a message to a container
+function appendMessage(container, message, className) {
+    const p = document.createElement('p');
+    p.className = className;
+    p.textContent = message;
+    container.appendChild(p);
+}
+
+// Display a list of news items
+function displayNewsList(newsList, container) {
+    const ul = document.createElement('ul');
+    ul.className = 'list-group';
+
+    newsList.forEach(newsItem => {
+        const li = document.createElement('li');
+        li.className = 'list-group-item';
+
+        const newsText = document.createElement('p');
+        newsText.textContent = newsItem.text;
+        li.appendChild(newsText);
+
+        if (newsItem.links && newsItem.links.length > 0) {
+            const linksContainer = document.createElement('div');
+            linksContainer.className = 'mt-2';
+
+            newsItem.links.forEach(link => {
+                const anchor = document.createElement('a');
+                anchor.href = `https://en.wikipedia.org${link.url}`;
+                anchor.textContent = link.text;
+                anchor.target = '_blank';
+                anchor.className = 'btn btn-link btn-sm';
+                linksContainer.appendChild(anchor);
+            });
+
+            li.appendChild(linksContainer);
+        }
+
+        ul.appendChild(li);
+    });
+
+    container.appendChild(ul);
+}
+
+// Fetch and display news of the day
 async function getNewsOfTheDay() {
+    const resultsContainer = document.getElementById('results');
+    clearElement(resultsContainer);
+
     try {
-        // Fetch the news data from the backend API
         const response = await fetch('/api/news_of_the_day');
         if (!response.ok) {
             throw new Error(`Error: ${response.statusText}`);
@@ -8,61 +61,24 @@ async function getNewsOfTheDay() {
 
         const newsList = await response.json();
 
-        // Get the results container
-        const resultsContainer = document.getElementById('results');
-        resultsContainer.innerHTML = ''; // Clear previous results
-
-        // Check if there are news items
         if (newsList.length === 0) {
-            resultsContainer.innerHTML = '<p class="text-muted">No news available for today.</p>';
+            appendMessage(resultsContainer, 'No news available for today.', 'text-muted');
             return;
         }
 
-        // Create a list to display the news items
-        const ul = document.createElement('ul');
-        ul.className = 'list-group';
-
-        newsList.forEach(newsItem => {
-            const li = document.createElement('li');
-            li.className = 'list-group-item';
-
-            // Add the news text
-            const newsText = document.createElement('p');
-            newsText.textContent = newsItem.text;
-            li.appendChild(newsText);
-
-            // Add the hyperlinks (if any)
-            if (newsItem.links && newsItem.links.length > 0) {
-                const linksContainer = document.createElement('div');
-                linksContainer.className = 'mt-2';
-
-                newsItem.links.forEach(link => {
-                    const anchor = document.createElement('a');
-                    // Prefix the link URL with "https://en.wikipedia.org/"
-                    anchor.href = `https://en.wikipedia.org${link.url}`;
-                    anchor.textContent = link.text;
-                    anchor.target = '_blank'; // Open link in a new tab
-                    anchor.className = 'btn btn-link btn-sm'; // Bootstrap styling
-                    linksContainer.appendChild(anchor);
-                });
-
-                li.appendChild(linksContainer);
-            }
-
-            ul.appendChild(li);
-        });
-
-        resultsContainer.appendChild(ul);
+        displayNewsList(newsList, resultsContainer);
     } catch (error) {
         console.error('Error fetching news:', error);
-        const resultsContainer = document.getElementById('results');
-        resultsContainer.innerHTML = '<p class="text-danger">Failed to load news. Please try again later.</p>';
+        appendMessage(resultsContainer, 'Failed to load news. Please try again later.', 'text-danger');
     }
 }
 
+// Fetch and display news by selected date
 async function getNewsByDate(date) {
+    const resultsContainer = document.getElementById('results');
+    clearElement(resultsContainer);
+
     try {
-        // Fetch the news data for the given date from the backend API
         const response = await fetch(`/api/news/${date}`);
         if (!response.ok) {
             throw new Error(`Error: ${response.statusText}`);
@@ -70,74 +86,30 @@ async function getNewsByDate(date) {
 
         const newsList = await response.json();
 
-        // Get the results container
-        const resultsContainer = document.getElementById('results');
-        resultsContainer.innerHTML = ''; // Clear previous results
-
-        // Check if there are news items
         if (newsList.length === 0) {
-            resultsContainer.innerHTML = '<p class="text-muted">No news available for the selected date.</p>';
+            appendMessage(resultsContainer, 'No news available for the selected date.', 'text-muted');
             return;
         }
 
-        // Create a list to display the news items
-        const ul = document.createElement('ul');
-        ul.className = 'list-group';
-
-        newsList.forEach(newsItem => {
-            const li = document.createElement('li');
-            li.className = 'list-group-item';
-
-            // Add the news text
-            const newsText = document.createElement('p');
-            newsText.textContent = newsItem.text;
-            li.appendChild(newsText);
-
-            // Add the hyperlinks (if any)
-            if (newsItem.links && newsItem.links.length > 0) {
-                const linksContainer = document.createElement('div');
-                linksContainer.className = 'mt-2';
-
-                newsItem.links.forEach(link => {
-                    const anchor = document.createElement('a');
-                    // Prefix the link URL with "https://en.wikipedia.org/"
-                    anchor.href = `https://en.wikipedia.org${link.url}`;
-                    anchor.textContent = link.text;
-                    anchor.target = '_blank'; // Open link in a new tab
-                    anchor.className = 'btn btn-link btn-sm'; // Bootstrap styling
-                    linksContainer.appendChild(anchor);
-                });
-
-                li.appendChild(linksContainer);
-            }
-
-            ul.appendChild(li);
-        });
-
-        resultsContainer.appendChild(ul);
+        displayNewsList(newsList, resultsContainer);
     } catch (error) {
         console.error('Error fetching news by date:', error);
-        const resultsContainer = document.getElementById('results');
-        resultsContainer.innerHTML = '<p class="text-danger">Failed to load news for the specified date. Please try again later.</p>';
+        appendMessage(resultsContainer, 'Failed to load news for the specified date. Please try again later.', 'text-danger');
     }
 }
 
+// Toggle visibility of date input form
 function toggleDateSearchForm() {
-    const dateSearchForm = document.getElementById('dateSearchForm');
-    // Toggle the visibility of the date search form
-    if (dateSearchForm.style.display === 'none' || dateSearchForm.style.display === '') {
-        dateSearchForm.style.display = 'block';
-    } else {
-        dateSearchForm.style.display = 'none';
-    }
+    const form = document.getElementById('dateSearchForm');
+    form.style.display = (form.style.display === 'none' || form.style.display === '') ? 'block' : 'none';
 }
 
+// Handle search button click for date-based news
 function searchByDate() {
-    const dateInput = document.getElementById('dateInput').value;
-    if (!dateInput) {
+    const date = document.getElementById('dateInput').value;
+    if (!date) {
         alert('Please select a date.');
         return;
     }
-    // Call the getNewsByDate function with the selected date
-    getNewsByDate(dateInput);
+    getNewsByDate(date);
 }
